@@ -1,3 +1,4 @@
+#include "bmh.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -5,6 +6,8 @@
 #include <math.h>
 
 #define ALPHABET_SIZE 26
+
+void searchBMH(char *txt, char *pat);
 
 char* encrypt(char* text, int shift) {
     int length = strlen(text);
@@ -49,7 +52,7 @@ float frequencies_expected[ALPHABET_SIZE] = {
 float calculate_score(float observed[], float expected[]) {
     float score = 0;
     for (int i = 0; i < ALPHABET_SIZE; i++) {
-        score += pow((observed[i] - expected[i]), 2);
+        score = score + pow((observed[i] - expected[i]), 2);
     }
     return score;
 }
@@ -117,6 +120,7 @@ int main() {
     printf("1. Criptografar\n");
     printf("2. Descriptografar\n");
     printf("3. Chave aleatoria e tabela de frequencias\n");
+    printf("4. Teste Algoritmo BMH\n");
     scanf("%d", &option);
 
     switch (option) {
@@ -147,11 +151,25 @@ int main() {
             scanf(" %[^\n]s", text);
             guess_key(text);
             break;
+        case 4:
+        char *input_text = NULL; // Renomeei text para input_text para evitar sombreamento
+        char *pattern = NULL;
+        size_t text_size = 0;
+        size_t pattern_size = 0;
 
+        printf("Digite o texto: ");
+        getline(&input_text, &text_size, stdin);
+        input_text[strcspn(input_text, "\n")] = '\0';
+
+        printf("Digite o padrão a ser procurado: ");
+        getline(&pattern, &pattern_size, stdin);
+        pattern[strcspn(pattern, "\n")] = '\0';
+
+        searchBMH(input_text, pattern); 
+        break;
         default:
             printf("Opcao invalida!\n");
             break;
     }
-
     return 0;
 }
