@@ -7,6 +7,7 @@
 #include <time.h>
 
 struct timespec begin;
+struct timespec end;
 
 #define ALPHABET_SIZE 26
 
@@ -126,6 +127,7 @@ int main() {
     printf("2. Descriptografar\n");
     printf("3. Chave aleatoria e tabela de frequencias\n");
     printf("4. Teste Algoritmo Boyer/Moore\n");
+    printf("5. Teste Algoritmo ShiftAnd\n");
     scanf("%d", &option);
 
     while ((getchar()) != '\n'); // Clear input buffer
@@ -185,7 +187,11 @@ int main() {
             fgets(pattern, 100, stdin);
             pattern[strcspn(pattern, "\n")] = '\0'; // Remove newline character
 
+            //timespec_get(&begin, TIME_UTC); 
             int result = boyerMoore(text, pattern);
+            //timespec_get(&end, TIME_UTC);
+
+            double time_spent = (end.tv_sec - begin.tv_sec)
 
             if (result != -1) {
                 printf("Padrao encontrado no indice: %d\n", result);
@@ -196,7 +202,9 @@ int main() {
             free(text); // Free memory allocated for text
             free(pattern);
             break;
+        case 5:
 
+        break;
         default:
             printf("Opcao invalida!\n");
             break;
