@@ -4,6 +4,9 @@
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
+
+struct timespec begin;
 
 #define ALPHABET_SIZE 26
 
@@ -122,7 +125,7 @@ int main() {
     printf("1. Criptografar\n");
     printf("2. Descriptografar\n");
     printf("3. Chave aleatoria e tabela de frequencias\n");
-    printf("4. Teste Algoritmo BMH\n");
+    printf("4. Teste Algoritmo Boyer/Moore\n");
     scanf("%d", &option);
 
     while ((getchar()) != '\n'); // Clear input buffer
