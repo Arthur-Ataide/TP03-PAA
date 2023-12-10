@@ -41,6 +41,31 @@ void frequency_table(char* text) {
     }
 }
 
+char* read_from_file(const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return NULL;
+    }
+
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char* content = (char*)malloc((file_size + 1) * sizeof(char));
+    if (content == NULL) {
+        fclose(file);
+        printf("Erro de alocacao de memoria.\n");
+        return NULL;
+    }
+
+    fread(content, sizeof(char), file_size, file);
+    content[file_size] = '\0';
+
+    fclose(file);
+    return content;
+}
+
 float frequencies_expected[ALPHABET_SIZE] = {
     14.63, 1.04, 3.88, 4.99, 12.57, 1.02, 1.30, 1.28, 6.18, 0.40, 0.02, 2.78, 4.74,
     5.05, 10.73, 2.52, 1.20, 6.53, 7.81, 4.34, 4.63, 1.67, 0.01, 0.21, 0.01, 0.47
@@ -93,7 +118,7 @@ void guess_key(char* text) {
         }
     }
 
-    printf("Chave mais provável: %d\n", best_shift);
+    printf("Chave mais provavel: %d\n", best_shift);
     printf("Chave real: %d\n", best_shift);
 }
 
@@ -108,50 +133,75 @@ void save_to_file(char* filename, char* content) {
 }
 
 
-int main() {
-    char text[1000];
-    int shift;
-    int option;
-
+void menu() {
     printf("Escolha uma opcao:\n");
     printf("1. Criptografar\n");
     printf("2. Descriptografar\n");
     printf("3. Chave aleatoria e tabela de frequencias\n");
-    scanf("%d", &option);
+    printf("4. Sair\n");
+}
+
+int main() {
+    char filename[100];
+    int option;
+    int shift;
+
+    do {
+        menu();
+        scanf("%d", &option);
 
     switch (option) {
         case 1:
-            printf("Digite o texto a ser criptografado: ");
-            scanf(" %[^\n]s", text);
-            printf("Digite o valor do shift: ");
-            scanf("%d", &shift);
-            char* encrypted_text = encrypt(text, shift);
-            printf("Texto criptografado: %s\n", encrypted_text);
-            save_to_file("texto_criptografado.txt", encrypted_text);
-            free(encrypted_text);
+            printf("Digite o nome do arquivo com o texto a ser criptografado: ");
+            scanf(" %[^\n]s", filename);
+            char* plaintext = read_from_file(filename);
+            if (plaintext != NULL) {
+                printf("Digite o valor do shift: ");
+                scanf("%d", &shift);
+                char* encrypted_text = encrypt(plaintext, shift);
+                printf("Texto criptografado: %s\n", encrypted_text);
+                save_to_file("texto_criptografado.txt", encrypted_text);
+                free(plaintext);
+                free(encrypted_text);
+            }
             break;
 
         case 2:
-            printf("Digite o texto a ser descriptografado: ");
-            scanf(" %[^\n]s", text);
-            printf("Digite o valor do shift: ");
-            scanf("%d", &shift);
-            char* decrypted_text = decrypt(text, shift);
-            printf("Texto descriptografado: %s\n", decrypted_text);
-            save_to_file("texto_descriptografado.txt", decrypted_text);
-            free(decrypted_text);
+            printf("Digite o nome do arquivo com o texto a ser descriptografado: ");
+            scanf(" %[^\n]s", filename);
+            char* encrypted_text = read_from_file(filename);
+            if (encrypted_text != NULL) {
+                printf("Digite o valor do shift: ");
+                scanf("%d", &shift);
+                char* decrypted_text = decrypt(encrypted_text, shift);
+                printf("Texto descriptografado: %s\n", decrypted_text);
+                save_to_file("texto_descriptografado.txt", decrypted_text);
+                free(encrypted_text);
+                free(decrypted_text);
+            }
             break;
 
         case 3:
-            printf("Digite o texto para calcular as frequencias: ");
-            scanf(" %[^\n]s", text);
-            guess_key(text);
+            printf("Digite o nome do arquivo com o texto para calcular as frequencias: ");
+            scanf(" %[^\n]s", filename);
+            char* frequency_text = read_from_file(filename);
+            if (frequency_text != NULL) {
+                guess_key(frequency_text);
+                free(frequency_text);
+            }
+            break;
+
+        case 4:
+            printf("Saindo do programa.\n");
             break;
 
         default:
-            printf("Opcao invalida!\n");
+            printf("Opção invalida!\n");
             break;
     }
+
+    }
+     while (option != 4);
 
     return 0;
 }
