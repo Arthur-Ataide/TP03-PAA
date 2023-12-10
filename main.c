@@ -1,4 +1,4 @@
-#include "bmh.c"
+#include "bm.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -7,7 +7,6 @@
 
 #define ALPHABET_SIZE 26
 
-void searchBMH(char *txt, char *pat);
 
 char* encrypt(char* text, int shift) {
     int length = strlen(text);
@@ -112,9 +111,12 @@ void save_to_file(char* filename, char* content) {
 
 
 int main() {
-    char text[1000];
+    char input_text[1000];
     int shift;
     int option;
+
+    char *text = NULL;
+    char *pattern = NULL;
 
     printf("Escolha uma opcao:\n");
     printf("1. Criptografar\n");
@@ -123,50 +125,75 @@ int main() {
     printf("4. Teste Algoritmo BMH\n");
     scanf("%d", &option);
 
+    while ((getchar()) != '\n'); // Clear input buffer
+
     switch (option) {
         case 1:
             printf("Digite o texto a ser criptografado: ");
-            scanf(" %[^\n]s", text);
+            scanf(" %[^\n]s", input_text);
+            text = strdup(input_text); // Duplicate the string
             printf("Digite o valor do shift: ");
             scanf("%d", &shift);
-            char* encrypted_text = encrypt(text, shift);
+            char *encrypted_text = encrypt(text, shift);
             printf("Texto criptografado: %s\n", encrypted_text);
             save_to_file("texto_criptografado.txt", encrypted_text);
             free(encrypted_text);
+            free(text); // Free the dynamically allocated text
             break;
 
         case 2:
             printf("Digite o texto a ser descriptografado: ");
-            scanf(" %[^\n]s", text);
+            scanf(" %[^\n]s", input_text);
+            text = strdup(input_text); // Duplicate the string
             printf("Digite o valor do shift: ");
             scanf("%d", &shift);
-            char* decrypted_text = decrypt(text, shift);
+            char *decrypted_text = decrypt(text, shift);
             printf("Texto descriptografado: %s\n", decrypted_text);
             save_to_file("texto_descriptografado.txt", decrypted_text);
             free(decrypted_text);
+            free(text); // Free the dynamically allocated text
             break;
 
         case 3:
             printf("Digite o texto para calcular as frequencias: ");
-            scanf(" %[^\n]s", text);
+            scanf(" %[^\n]s", input_text);
+            text = strdup(input_text); // Duplicate the string
             guess_key(text);
+            free(text); // Free the dynamically allocated text
             break;
+
         case 4:
-        char *input_text = NULL; // Renomeei text para input_text para evitar sombreamento
-        char *pattern = NULL;
-        size_t text_size = 0;
-        size_t pattern_size = 0;
+            printf("Entre com o texto: ");
+            text = (char *)malloc(sizeof(char) * 1000); // Allocate memory for text
+            if (text == NULL) {
+                printf("Alocacao de memoria falhou :( .\n");
+                return -1;
+            }
+            fgets(text, 1000, stdin);
+            text[strcspn(text, "\n")] = '\0'; // Remove newline character
 
-        printf("Digite o texto: ");
-        getline(&input_text, &text_size, stdin);
-        input_text[strcspn(input_text, "\n")] = '\0';
+            printf("Entre com o padrao a ser procurado: ");
+            pattern = (char *)malloc(sizeof(char) * 100); // Allocate memory for pattern
+            if (pattern == NULL) {
+                printf("Alocacao de memoria falhou para o padrao :( .\n");
+                free(text); // Free memory allocated for text
+                return -1;
+            }
+            fgets(pattern, 100, stdin);
+            pattern[strcspn(pattern, "\n")] = '\0'; // Remove newline character
 
-        printf("Digite o padrão a ser procurado: ");
-        getline(&pattern, &pattern_size, stdin);
-        pattern[strcspn(pattern, "\n")] = '\0';
+            int result = boyerMoore(text, pattern);
 
-        searchBMH(input_text, pattern); 
-        break;
+            if (result != -1) {
+                printf("Padrao encontrado no indice: %d\n", result);
+            } else {
+                printf("Padrao nao encontrado no texto.\n");
+            }
+
+            free(text); // Free memory allocated for text
+            free(pattern);
+            break;
+
         default:
             printf("Opcao invalida!\n");
             break;
