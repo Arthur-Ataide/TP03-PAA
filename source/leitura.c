@@ -1,6 +1,6 @@
 #include "../headers/leitura.h"
 
-void lerTexto(TTexto* texto, char* nomeArquivo){
+void lerTextoCasamento(TTexto* texto, char* nomeArquivo){
     FILE *arquivo = fopen(nomeArquivo, "r");
 
     if(arquivo == NULL){
@@ -36,8 +36,42 @@ void lerTexto(TTexto* texto, char* nomeArquivo){
     fclose(arquivo);
 }
 
+char* leitura_arquivo_TAREFAB(const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return NULL;
+    }
+
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char* content = (char*)malloc((file_size + 1) * sizeof(char));
+    if (content == NULL) {
+        fclose(file);
+        printf("Erro de alocacao de memoria.\n");
+        return NULL;
+    }
+
+    fread(content, sizeof(char), file_size, file);
+    content[file_size] = '\0';
+
+    fclose(file);
+    return content;
+}
+
+void save_to_file(char* filename, char* content) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+    fprintf(file, "%s", content);
+    fclose(file);
+}
+
 void freeMemoria(TTexto* texto) {
     free(texto->padrao);
     free(texto->texto);
-    free(texto);
 }

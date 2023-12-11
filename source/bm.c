@@ -1,4 +1,4 @@
-#include "bm.h"
+#include "../headers/bm.h"
 
 #define ALPHABET_SIZE_BM 256
 

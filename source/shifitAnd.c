@@ -23,12 +23,6 @@ PshifitAnd criarTabelaM(char* padrao){
         
     }
 
-    // for (int i = 0; i < tabela->tamanho; i++) {
-    //     printf("%c: ", (unsigned char)padrao[i]);
-    //     print_binary(masks[(unsigned char)padrao[i]]);
-    //     printf("\n");
-    // }
-
     tabela->M = masks;
 
     return tabela;

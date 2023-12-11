@@ -6,6 +6,10 @@ typedef struct TTexto{
     int tamanho;
 } TTexto;
 
-void lerTexto(TTexto* texto, char* nomeArquivo);
+void lerTextoCasamento(TTexto* texto, char* nomeArquivo);
+
+char* leitura_arquivo_TAREFAB(const char* filename);
+
+void save_to_file(char* filename, char* content);
 
 void freeMemoria(TTexto* texto);
