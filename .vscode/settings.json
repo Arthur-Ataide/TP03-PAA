@@ -2,5 +2,6 @@
     "files.associations": {
         "include.h": "c",
         "shifitAnd.h": "c",
+        "stdio.h": "c"
     }
 }

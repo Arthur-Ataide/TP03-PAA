@@ -1,6 +1,4 @@
-# include <limits.h>
-# include <string.h>
-# include <stdio.h>
+#include "./include.h"
 
 int maximo(int a, int b);
 

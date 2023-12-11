@@ -5,7 +5,8 @@
 #include <math.h>
 #include <stdbool.h>
 #include <ctype.h>
-
+#include <limits.h>
+#include <time.h>
 
 #if defined(__MINGW32__) || defined(_MSC_VER)
 #define limpar_input() fflush(stdin)

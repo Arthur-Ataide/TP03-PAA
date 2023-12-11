@@ -1,17 +1,11 @@
-#include "./headers/include.h"
-#include "bm.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
+#include "./headers/bm.h"
+#include "./headers/shifitAnd.h"
+#include "./headers/leitura.h"
 
-struct timespec begin;
-struct timespec end;
+//struct timespec begin;
+//struct timespec end;
 
 #define ALPHABET_SIZE 26
-
 
 char* encrypt(char* text, int shift) {
     int length = strlen(text);
@@ -120,15 +114,20 @@ int main() {
     int shift;
     int option;
 
+    TTexto* texto = (TTexto*) malloc(sizeof(TTexto));
+
     char *text = NULL;
     char *pattern = NULL;
+
+    TshifitAnd* tabela = NULL;
 
     printf("Escolha uma opcao:\n");
     printf("1. Criptografar\n");
     printf("2. Descriptografar\n");
     printf("3. Chave aleatoria e tabela de frequencias\n");
-    printf("4. Teste Algoritmo Boyer/Moore\n");
-    printf("5. Teste Algoritmo ShiftAnd\n");
+    printf("4. Ler o texto para testar o casamento\n");
+    printf("5. Teste Algoritmo Boyer/Moore\n");
+    printf("6. Teste Algoritmo ShiftAnd\n");
     scanf("%d", &option);
 
     while ((getchar()) != '\n'); // Clear input buffer
@@ -169,6 +168,18 @@ int main() {
             break;
 
         case 4:
+            char 
+            printf("Digite o numero do texto a ser lido\n");
+
+            strcat(texto->nomeArquivo, "./casamento/texto");
+
+            lerTexto(texto, "./casamento/texto1.txt");
+            printf("Texto: %s\n", texto->texto);
+            printf("Padrao: %s\n", texto->padrao);
+            freeMemoria(texto);
+            break;
+
+        case 5:
             printf("Entre com o texto: ");
             text = (char *)malloc(sizeof(char) * 1000); // Allocate memory for text
             if (text == NULL) {
@@ -188,11 +199,13 @@ int main() {
             fgets(pattern, 100, stdin);
             pattern[strcspn(pattern, "\n")] = '\0'; // Remove newline character
 
+            clock_t start_time = clock();
             //timespec_get(&begin, TIME_UTC); 
             int result = boyerMoore(text, pattern);
             //timespec_get(&end, TIME_UTC);
-
-            double time_spent = (end.tv_sec - begin.tv_sec)
+            clock_t end_time = clock();
+            double elapsed_time = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+            printf("Tempo de execucao: %lf segundos\n", elapsed_time);
 
             if (result != -1) {
                 printf("Padrao encontrado no indice: %d\n", result);
@@ -203,8 +216,14 @@ int main() {
             free(text); // Free memory allocated for text
             free(pattern);
             break;
-        case 5:
+        case 6:
+            tabela = criarTabelaM("teste");
+            clock_t start_time = clock();
+            shiftAnd(tabela, "foram feitos em todos os testes posiveis mais nao encontramos");
+            clock_t end_time = clock();
 
+            double elapsed_time = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+            printf("Tempo de execucao: %lf segundos\n", elapsed_time);
         break;
         default:
             printf("Opcao invalida!\n");
