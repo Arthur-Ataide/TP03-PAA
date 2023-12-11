@@ -118,7 +118,7 @@ int main() {
                 if (result != -1) {
                     printf("Padrao encontrado no indice: %d\n", result);
                 } else {
-                    printf("Padrao nao encontrado no texto.\n");
+                    printf("\n\nPadrao nao encontrado\n\n");
                 }
 
                 break;

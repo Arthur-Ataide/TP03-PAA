@@ -10,15 +10,17 @@ void lerTextoCasamento(TTexto* texto, char* nomeArquivo){
 
     char palavra[100];
 
-    if (fscanf(arquivo, "%s", palavra) == 1) {
-        printf("O padrao eh: %s\n", palavra);
-    }
+    fscanf(arquivo, "%s", palavra);
+        
 
     fscanf(arquivo, " ");
 
     texto->padrao = (char*)malloc(sizeof(char) * (strlen(palavra) + 1));
 
     strcpy(texto->padrao, palavra);
+
+    texto->padrao = strlwr(texto->padrao);
+    printf("O padrao eh: %s\n", texto->padrao);
 
     long pos = ftell(arquivo);
 
@@ -34,6 +36,8 @@ void lerTextoCasamento(TTexto* texto, char* nomeArquivo){
     texto->texto[texto->tamanho] = '\0';
 
     fclose(arquivo);
+
+    texto->texto = strlwr(texto->texto);
 }
 
 char* leitura_arquivo_TAREFAB(const char* filename) {
@@ -58,6 +62,7 @@ char* leitura_arquivo_TAREFAB(const char* filename) {
     content[file_size] = '\0';
 
     fclose(file);
+
     return content;
 }
 

@@ -36,6 +36,7 @@ void shiftAnd(PshifitAnd tabela, char* texto) {
 
     // Inicialize o vetor de estados
     unsigned int state = 0;
+    bool encontrado = false;
 
     // Iterar sobre o texto
     for (int i = 0; i < n; i++) {
@@ -45,6 +46,11 @@ void shiftAnd(PshifitAnd tabela, char* texto) {
         // Verifique se a posição mais à esquerda é 1 (padrão encontrado)
         if (state & bitMask) {
             printf("Padrao encontrado na posicao %d\n", i - tabela->tamanho + 1);
+            encontrado = true;
         }
+    }
+
+    if (!encontrado) {
+        printf("\n\nPadrao nao encontrado\n\n");
     }
 }
